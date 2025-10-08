@@ -47,7 +47,6 @@ class PhoneBook{
 }
 
 public class PhoneBookWithSwing extends JFrame{
-	private Scanner sc;
 	private PhoneBook pb;
 	private int n;
 	private MyPanel panel = new MyPanel();
@@ -71,12 +70,15 @@ public class PhoneBookWithSwing extends JFrame{
 	}
 	
 	public static void main(String[] args) {
-		PhoneBook pb = new PhoneBook(2);
-		Phone p1 = new Phone("천자민","010-1234-5679");
-		pb.add_phoneNumber(p1);
-		Phone p2 = new Phone("누군가","010-1434-5679");
-		pb.add_phoneNumber(p2);
-		
+		Scanner sc = new Scanner(System.in);
+		int phoneCnt = sc.nextInt();
+		PhoneBook pb = new PhoneBook(phoneCnt);
+		for(int i = 0;i<phoneCnt;i++) {
+			String name = sc.next();
+			String tel = sc.next();
+			Phone p = new Phone(name,tel);
+			pb.add_phoneNumber(p);
+		}
 		new PhoneBookWithSwing(pb);
 	}
 
