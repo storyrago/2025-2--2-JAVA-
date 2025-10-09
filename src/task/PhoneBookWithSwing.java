@@ -4,28 +4,10 @@ import java.util.Scanner;
 import javax.swing.*;
 import java.awt.*;
 
-
-class Phone{
-	//필드
-	private String name;
-	private String tel;			
-	//생성자
-	Phone(String name, String tel){
-		this.name = name;
-		this.tel = tel;
-	}	
-	//메소드 get기능
-	String getName() {
-		return name;
-	}
-	String getTel() {
-		return tel;
-	}
-}
 class PhoneBook{
 	private int phoneCount = 0;
 	private int MaxElement;
-	private Phone[] phones;
+	private Phone[] phones; //Phone 클래스가 같은 패키지 내 PhoneBookWithConsole 에 디폴트 접근지정으로 설정돼있어 오류 안남 (디폴트 접근지정은 같은 패키지내에서만 접근 가능)
 	PhoneBook(int n){
 		MaxElement = n;
 		this.phones = new Phone[n];
@@ -38,6 +20,9 @@ class PhoneBook{
 		}
 		phones[phoneCount++] = p;
 	}
+	String getPhoneMaster(int i) {
+		return phones[i].getName();
+	}
 	String getPhoneInfo(int i) {
 		return phones[i].getName() +" "+ phones[i].getTel();
 	}
@@ -49,10 +34,12 @@ class PhoneBook{
 public class PhoneBookWithSwing extends JFrame{
 	private PhoneBook pb;
 	private int n;
+	private String SearchName;
 	private MyPanel panel = new MyPanel();
-	PhoneBookWithSwing(PhoneBook pb){
+	PhoneBookWithSwing(PhoneBook pb, String SearchName){
 		this.pb = pb;
 		this.n = pb.getMaxElement();
+		this.SearchName = SearchName;
 		setTitle("전화번호 리스트");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(panel);
@@ -64,22 +51,28 @@ public class PhoneBookWithSwing extends JFrame{
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			for(int i = 0;i<n;i++) {
-				g.drawString(pb.getPhoneInfo(i), 30, 30*(i+1));
+				if(SearchName.equals(pb.getPhoneMaster(i))) {
+					g.drawString(pb.getPhoneInfo(i), 30, 30*(i+1));
+				}
 			}
 		}
 	}
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		System.out.println("저장할 전화번호부 개수 입력: ");
 		int phoneCnt = sc.nextInt();
 		PhoneBook pb = new PhoneBook(phoneCnt);
 		for(int i = 0;i<phoneCnt;i++) {
+			System.out.println("저장한 이름과 번호를 입력: ");
 			String name = sc.next();
 			String tel = sc.next();
 			Phone p = new Phone(name,tel);
 			pb.add_phoneNumber(p);
 		}
-		new PhoneBookWithSwing(pb);
+		System.out.println("검색할 이름 입력: ");
+		String SearchName = sc.next();
+		new PhoneBookWithSwing(pb,SearchName);
 	}
 
 }
